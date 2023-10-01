@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const { Engine } = require("@aux4/engine");
+const { fakeValueExecutor } = require("./command/FakeValueExecutor");
+const { fakeObjectExecutor } = require("./command/FakeObjectExecutor");
 
 const config = {
   profiles: [
@@ -8,10 +10,73 @@ const config = {
       name: "main",
       commands: [
         {
-          name: "",
-          execute: [],
+          name: "fake",
+          execute: ["profile:fake"],
           help: {
-            text: "",
+            text: "Generate fake data"
+          }
+        }
+      ]
+    },
+    {
+      name: "fake",
+      commands: [
+        {
+          name: "value",
+          execute: fakeValueExecutor,
+          help: {
+            text: "<module> <method> Generate fake data",
+            variables: [
+              {
+                name: "count",
+                text: "Number of items to generate",
+                default: ""
+              },
+              {
+                name: "min",
+                text: "Minimum number of items to generate",
+                default: ""
+              },
+              {
+                name: "max",
+                text: "Maximum number of items to generate",
+                default: ""
+              }
+            ]
+          }
+        },
+        {
+          name: "object",
+          execute: fakeObjectExecutor,
+          help: {
+            text: "Generate fake object",
+            variables: [
+              {
+                name: "configFile",
+                text: "Configuration file.\nIt automatically reads *config.yaml*, *config.yml*, *config.json*.",
+                default: ""
+              },
+              {
+                name: "config",
+                text: "Configuration name",
+                default: ""
+              },
+              {
+                name: "count",
+                text: "Number of items to generate",
+                default: ""
+              },
+              {
+                name: "min",
+                text: "Minimum number of items to generate",
+                default: ""
+              },
+              {
+                name: "max",
+                text: "Maximum number of items to generate",
+                default: ""
+              }
+            ]
           }
         }
       ]
