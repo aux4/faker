@@ -4,6 +4,8 @@ const { Engine } = require("@aux4/engine");
 const { fakeValueExecutor } = require("./command/FakeValueExecutor");
 const { fakeObjectExecutor } = require("./command/FakeObjectExecutor");
 
+process.title = "aux4-faker";
+
 const config = {
   profiles: [
     {
