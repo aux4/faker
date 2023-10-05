@@ -29,7 +29,7 @@
   "homepage": "https://github.com/aux4/faker#readme",
   "dependencies": {
     "@aux4/config": "^1.0.2",
-    "@aux4/engine": "^1.0.31",
+    "@aux4/engine": "^1.0.32",
     "@aux4/input": "^0.0.3",
     "@faker-js/faker": "^8.1.0"
   },
