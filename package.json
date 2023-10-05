@@ -1,6 +1,6 @@
 {
   "name": "@aux4/faker",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "CLI to generate fake data",
   "main": "index.js",
   "preferGlobal": true,
