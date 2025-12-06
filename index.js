@@ -1,7 +1,7 @@
-import { generateValue, generateObject, setLocale } from "./lib/FakerGenerator.js";
+import { generateValue, generateObject, transformObject, setLocale } from "./lib/FakerGenerator.js";
 import { convert } from "./lib/Converter.js";
 
-export { generateValue, generateObject };
+export { generateValue, generateObject, transformObject };
 
 function parseIntOrEmpty(value) {
   if (!value || value === "") return undefined;
@@ -56,8 +56,47 @@ async function fakeValue(args) {
   }
 }
 
+async function readStdin() {
+  return new Promise((resolve, reject) => {
+    let data = "";
+    process.stdin.setEncoding("utf-8");
+    process.stdin.on("data", (chunk) => (data += chunk));
+    process.stdin.on("end", () => resolve(data));
+    process.stdin.on("error", (err) => reject(err));
+  });
+}
+
+function parseInput(input) {
+  const trimmed = input.trim();
+  if (!trimmed) return { data: null, format: null };
+
+  // Try parsing as JSON array or object first
+  if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      const format = Array.isArray(parsed) ? "array" : "object";
+      return { data: parsed, format };
+    } catch (e) {
+      // Not valid JSON, try NDJSON
+    }
+  }
+
+  // Try parsing as NDJSON (newline-delimited JSON)
+  const lines = trimmed.split("\n").filter(line => line.trim());
+  const objects = [];
+  for (const line of lines) {
+    try {
+      objects.push(JSON.parse(line));
+    } catch (e) {
+      // Skip invalid lines
+    }
+  }
+  return objects.length > 0 ? { data: objects, format: "ndjson" } : { data: null, format: null };
+}
+
 // aux4 fake object [--lang locale] [--count N] [--min N] [--max N] --config <name>
 // mapping is passed as JSON string from aux4 config
+// stdin can contain JSON object, array, or NDJSON to transform
 async function fakeObject(args) {
   const [lang, countStr, minStr, maxStr, mappingJson] = args;
 
@@ -73,8 +112,27 @@ async function fakeObject(args) {
 
   const mapping = JSON.parse(mappingJson);
 
-  const data = generateObject(mapping, { count, min, max });
-  console.log(JSON.stringify(data, null, 2));
+  // Read from stdin
+  const stdinData = await readStdin();
+  const { data: input, format } = parseInput(stdinData);
+
+  if (input === null) {
+    // No stdin input, generate new fake object(s)
+    const data = generateObject(mapping, { count, min, max });
+    console.log(JSON.stringify(data, null, 2));
+  } else if (format === "ndjson") {
+    // NDJSON - transform each and output as NDJSON
+    const results = input.map(obj => transformObject(obj, mapping));
+    results.forEach(obj => console.log(JSON.stringify(obj)));
+  } else if (format === "array") {
+    // Array of objects - transform each one
+    const results = input.map(obj => transformObject(obj, mapping));
+    console.log(JSON.stringify(results, null, 2));
+  } else {
+    // Single object - transform it
+    const result = transformObject(input, mapping);
+    console.log(JSON.stringify(result, null, 2));
+  }
 }
 
 (async () => {
