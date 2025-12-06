@@ -50,7 +50,7 @@ async function fakeValue(args) {
   const data = generateValue(category, type, fakerParams, { count, min, max });
 
   if (typeof data === "object") {
-    console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data));
   } else {
     console.log(data);
   }
@@ -119,7 +119,7 @@ async function fakeObject(args) {
   if (input === null) {
     // No stdin input, generate new fake object(s)
     const data = generateObject(mapping, { count, min, max });
-    console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data));
   } else if (format === "ndjson") {
     // NDJSON - transform each and output as NDJSON
     const results = input.map(obj => transformObject(obj, mapping));
@@ -127,11 +127,11 @@ async function fakeObject(args) {
   } else if (format === "array") {
     // Array of objects - transform each one
     const results = input.map(obj => transformObject(obj, mapping));
-    console.log(JSON.stringify(results, null, 2));
+    console.log(JSON.stringify(results));
   } else {
     // Single object - transform it
     const result = transformObject(input, mapping);
-    console.log(JSON.stringify(result, null, 2));
+    console.log(JSON.stringify(result));
   }
 }
 
