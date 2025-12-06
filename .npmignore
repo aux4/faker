@@ -4,3 +4,6 @@ test/
 coverage/
 .aux4
 .prettierrc.json
+index.js
+lib/
+rollup.config.js

@@ -7,16 +7,17 @@
           "name": "ship",
           "execute": [
             "git pull -r",
-            "npm test",
+            "npm run build",
             "git push"
           ],
           "help": {
-            "text": "🚢 pull test and push the code"
+            "text": "pull build and push the code"
           }
         },
         {
           "name": "release",
           "execute": [
+            "npm run build",
             "npm version ${version}",
             "json:cat package.json",
             "set:versionNumber=${response.version}",

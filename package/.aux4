@@ -1,0 +1,122 @@
+{
+  "scope": "aux4",
+  "name": "faker",
+  "version": "0.1.0",
+  "description": "Generate fake data",
+  "license": "Apache-2.0",
+  "tags": [
+    "faker",
+    "mock",
+    "data"
+  ],
+  "system": [
+    [
+      "test:node --version",
+      "brew:node",
+      "apt:nodejs",
+      "linux:nodejs"
+    ]
+  ],
+  "profiles": [
+    {
+      "name": "main",
+      "commands": [
+        {
+          "name": "fake",
+          "execute": [
+            "profile:fake"
+          ],
+          "help": {
+            "text": "Generate fake data"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fake",
+      "commands": [
+        {
+          "name": "value",
+          "execute": [
+            "node ${packageDir}/lib/aux4-faker.js value values(lang, category, type, count, min, max, arg*)"
+          ],
+          "help": {
+            "text": "Generate fake data value",
+            "variables": [
+              {
+                "name": "lang",
+                "text": "Faker language/locale (e.g., en_US, pt_BR, es)",
+                "default": "en_US"
+              },
+              {
+                "name": "category",
+                "text": "Faker category (e.g., person, internet, lorem)",
+                "arg": true
+              },
+              {
+                "name": "type",
+                "text": "Faker type (e.g., firstName, email, sentence)"
+              },
+              {
+                "name": "count",
+                "text": "Number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "min",
+                "text": "Minimum number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "max",
+                "text": "Maximum number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "arg",
+                "text": "Arguments for the faker method (e.g., --arg min=1 --arg max=100)",
+                "multiple": true,
+                "default": ""
+              }
+            ]
+          }
+        },
+        {
+          "name": "object",
+          "execute": [
+            "stdin:node ${packageDir}/lib/aux4-faker.js object values(lang, count, min, max, mapping)"
+          ],
+          "help": {
+            "text": "Generate fake object",
+            "variables": [
+              {
+                "name": "lang",
+                "text": "Faker language/locale (e.g., en_US, pt_BR, es)",
+                "default": "en_US"
+              },
+              {
+                "name": "count",
+                "text": "Number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "min",
+                "text": "Minimum number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "max",
+                "text": "Maximum number of items to generate",
+                "default": ""
+              },
+              {
+                "name": "mapping",
+                "text": "Object mapping configuration"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

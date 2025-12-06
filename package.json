@@ -1,14 +1,15 @@
 {
   "name": "@aux4/faker",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "CLI to generate fake data",
-  "main": "index.js",
-  "preferGlobal": true,
-  "bin": {
-    "aux4-faker": "bin/executable.js"
+  "type": "module",
+  "main": "package/lib/aux4-faker.js",
+  "exports": {
+    ".": "./package/lib/aux4-faker.js"
   },
   "scripts": {
-    "test": "jest"
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -28,12 +29,12 @@
   },
   "homepage": "https://github.com/aux4/faker#readme",
   "dependencies": {
-    "@aux4/config": "^1.0.2",
-    "@aux4/engine": "^1.0.33",
-    "@aux4/input": "^0.0.3",
-    "@faker-js/faker": "^8.1.0"
+    "@faker-js/faker": "^10.1.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "rollup": "^4.27.4"
   }
 }
