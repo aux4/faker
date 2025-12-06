@@ -1,10 +1,11 @@
 {
   "scope": "aux4",
   "name": "faker",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Generate fake data",
   "license": "Apache-2.0",
   "tags": [
+    "fake",
     "faker",
     "mock",
     "data"
@@ -13,7 +14,6 @@
     [
       "test:node --version",
       "brew:node",
-      "apt:nodejs",
       "linux:nodejs"
     ]
   ],

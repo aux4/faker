@@ -1,9 +1,13 @@
 import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const dtsPath = join(__dirname, '../node_modules/@faker-js/faker/dist/airline-DF6RqYmq.d.ts');
+const packageDir = process.argv[2];
+if (!packageDir) {
+  console.error('Usage: node generate-reference.mjs <packageDir>');
+  process.exit(1);
+}
+
+const dtsPath = join(packageDir, 'node_modules/@faker-js/faker/dist/airline-DF6RqYmq.d.ts');
 const dtsContent = readFileSync(dtsPath, 'utf-8');
 
 const results = [];
@@ -97,7 +101,7 @@ for (const r of unique.sort((a, b) => a.module.localeCompare(b.module) || a.meth
 }
 
 // Output as markdown
-console.log('# Faker.js Reference');
+console.log('## Reference');
 console.log('');
 console.log('Complete list of available faker categories and types.');
 
@@ -105,18 +109,24 @@ for (const [module, methods] of byModule) {
   console.log('');
   console.log('### ' + module);
   console.log('');
-  console.log('| Type | Args |');
-  console.log('|------|------|');
+  console.log('<table>');
+  console.log('<tr><th style="background-color: black; color: white; width: 30%;">Type</th><th style="background-color: black; color: white;">Args</th></tr>');
 
   for (const r of methods) {
-    // Format args as line-separated list
-    let argsDisplay = '';
-    if (r.args.length > 0) {
-      argsDisplay = r.args.join('<br>');
+    if (r.args.length === 0) {
+      console.log(`<tr><td>${r.method}</td><td></td></tr>`);
+    } else if (r.args.length === 1) {
+      console.log(`<tr><td>${r.method}</td><td>${r.args[0]}</td></tr>`);
+    } else {
+      // Use rowspan for multiple args
+      console.log(`<tr><td rowspan="${r.args.length}">${r.method}</td><td>${r.args[0]}</td></tr>`);
+      for (let i = 1; i < r.args.length; i++) {
+        console.log(`<tr><td>${r.args[i]}</td></tr>`);
+      }
     }
-
-    console.log('| ' + r.method + ' | ' + argsDisplay + ' |');
   }
+
+  console.log('</table>');
 }
 
 console.log('');
