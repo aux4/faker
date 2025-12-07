@@ -97,7 +97,7 @@ aux4 fake value person --type firstName --lang pt_BR
 ```
 
 ```expect:regex
-^[A-Za-zÀ-ÿ]+$
+^[A-Za-zÀ-ÿ ]+$
 ```
 
 ## Internet Category
