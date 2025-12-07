@@ -1,7 +1,13 @@
 import { generateValue, generateObject, transformObject, setLocale } from "./lib/FakerGenerator.js";
 import { convert } from "./lib/Converter.js";
+import { getCategories, getTypesForCategory } from "./lib/FakerMetadata.js";
 
 export { generateValue, generateObject, transformObject };
+
+// ANSI color codes
+const CYAN = '\x1b[36m';
+const YELLOW = '\x1b[33m';
+const RESET = '\x1b[0m';
 
 function parseIntOrEmpty(value) {
   if (!value || value === "") return undefined;
@@ -135,6 +141,45 @@ async function fakeObject(args) {
   }
 }
 
+function list(args) {
+  const [category, typeFilter] = args;
+
+  // No category provided - list all categories
+  if (!category || category === "") {
+    const categories = getCategories();
+    categories.forEach(cat => {
+      console.log(`${YELLOW}${cat}${RESET}`);
+    });
+    return;
+  }
+
+  // Category provided - list types for that category
+  let types = getTypesForCategory(category);
+
+  if (types.length === 0) {
+    console.error(`Error: Unknown category '${category}'`);
+    console.error("Use 'aux4 fake list' to see available categories");
+    process.exit(1);
+  }
+
+  // Filter by type if provided
+  if (typeFilter && typeFilter !== "") {
+    types = types.filter(t => t.method === typeFilter);
+    if (types.length === 0) {
+      console.error(`Error: Unknown type '${typeFilter}' in category '${category}'`);
+      console.error(`Use 'aux4 fake list ${category}' to see available types`);
+      process.exit(1);
+    }
+  }
+
+  types.forEach(type => {
+    console.log(`${YELLOW}${type.method}${RESET}`);
+    type.args.forEach(arg => {
+      console.log(`  ${CYAN}${arg}${RESET}`);
+    });
+  });
+}
+
 (async () => {
   const args = process.argv.slice(2);
 
@@ -142,6 +187,7 @@ async function fakeObject(args) {
     console.error("Usage:");
     console.error("  node index.js value <lang> <category> <type> [count] [min] [max] [argsJson]");
     console.error("  node index.js object <lang> [count] [min] [max] <mappingJson>");
+    console.error("  node index.js list [category] [type]");
     process.exit(1);
   }
 
@@ -153,9 +199,11 @@ async function fakeObject(args) {
       await fakeValue(actionArgs);
     } else if (action === "object") {
       await fakeObject(actionArgs);
+    } else if (action === "list") {
+      list(actionArgs);
     } else {
       console.error(`Unknown action: ${action}`);
-      console.error("Available actions: value, object");
+      console.error("Available actions: value, object, list");
       process.exit(1);
     }
   } catch (e) {

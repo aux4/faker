@@ -36,6 +36,28 @@
       "name": "fake",
       "commands": [
         {
+          "name": "list",
+          "execute": [
+            "node ${packageDir}/lib/aux4-faker.js list values(category, type)"
+          ],
+          "help": {
+            "text": "List faker categories and types",
+            "variables": [
+              {
+                "name": "category",
+                "text": "Faker category (e.g., person, internet, lorem)",
+                "arg": true,
+                "default": ""
+              },
+              {
+                "name": "type",
+                "text": "Filter by specific type (e.g., firstName, email)",
+                "default": ""
+              }
+            ]
+          }
+        },
+        {
           "name": "value",
           "execute": [
             "node ${packageDir}/lib/aux4-faker.js value values(lang, category, type, count, min, max, arg*)"

@@ -59,6 +59,19 @@ aux4 fake value <category> --type <type> [options]
 
 Generate fake objects or transform existing JSON with fake data.
 
+### aux4 fake list
+
+List faker categories and types.
+
+```bash
+aux4 fake list [category] [--type <type>]
+```
+
+**Options:**
+
+- `category` - Faker category (e.g., `person`, `internet`). If omitted, lists all categories.
+- `--type` - Filter by specific type (e.g., `firstName`, `email`)
+
 ```bash
 aux4 fake object --config <name> [options]
 ```
