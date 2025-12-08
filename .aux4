@@ -6,6 +6,7 @@
         {
           "name": "build",
           "execute": [
+            "node ${packageDir}/scripts/generate-metadata.mjs ${packageDir}",
             "npm run build",
             "node ${packageDir}/scripts/generate-reference.mjs ${packageDir} > ${packageDir}/package/reference.md",
             "node ${packageDir}/scripts/update-readme.mjs ${packageDir}",
